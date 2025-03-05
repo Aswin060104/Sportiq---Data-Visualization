@@ -1,0 +1,254 @@
+.dashboard-container{
+    display: flex;
+    flex-direction: row;
+    position: relative;
+}
+.main-container{
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    background-color: rgb(238, 233, 233);
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 14px;
+    height: 100vh;
+    overflow-y: scroll;
+}
+.dashboard-title{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    place-content: center;
+    gap: 20px;
+    padding: 10px;
+    box-shadow: 0 0 2px rgb(135, 135, 165);
+    background-color: white;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 16px;
+}
+::-webkit-scrollbar{
+    width: 2px;
+}
+.dashboard-title-left h3, p{
+    margin: 0px;
+    margin-left: 20px;
+}
+.dashboard-title-center{
+    display: flex;
+    flex: 1;
+    align-items: end;
+    justify-content: end;
+}
+.dashboard-title-center img{
+    width: 25px;
+}
+.graph-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    height: max-content;
+    width: calc(100% - 40px);  
+    padding: 20px;
+    gap: 30px;
+}
+.graph-container-left{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 75%;
+    height: max-content;
+}
+.sales-profit-container{
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
+.salary-card{
+    height: 220px;
+    width: 50%;
+    box-shadow: 0 0 2px rgb(135, 135, 165);
+    padding: 10px;
+    background-color: white;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.salary-card h3{
+    margin: 0px;
+}
+.sales-chart-container{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+}
+.sales-chart{
+    width: 120%;
+}
+.sales-details{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    width: 60%;
+    text-align: center;
+}
+.order-card{
+    width: 50%;
+    box-shadow: 0 0 2px rgb(135, 135, 165);
+    padding: 10px;
+    background-color: white;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    height: 220px;
+}
+.order-chart-container{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+}
+.order-chart{
+    width: 120%;
+}
+.sales-vs-profit-container{
+    width: calc(100% - 20px);
+    height: 350px;
+    box-shadow: 0 0 2px rgb(135, 135, 165);
+    padding: 10px;
+    background-color: white;
+    border-radius: 5px;
+}
+#salesVsProfit{
+    height: 180px !important;
+}
+.yearly-sales-chart{
+    width: 100%;
+    height: 100px;
+}
+.graph-container-right{
+    display: flex;
+    flex-direction: column;
+    row-gap: 10px;
+}
+.new-user-container{
+    width: calc(100% - 20px);
+    height: 270px;
+    box-shadow: 0 0 2px rgb(135, 135, 165);
+    padding: 10px;
+    background-color: white;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    row-gap: 10px;
+    align-items: center;
+}
+.new-user-container h3{
+    text-align: left;
+}
+.user-chart{
+    width: 100%;
+}
+.new-user-details{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    justify-content: space-evenly;
+}
+#userChart{
+    width: calc(100% - 20px) !important; 
+    height:  160px !important;
+}
+.table-container{
+    height: max-content;
+    width: calc(100% - 20px);
+    padding: 10px;
+    box-shadow: 0 0 2px rgb(135, 135, 165);
+    background-color: white;
+    border-radius: 5px;
+}
+.table-container-heading{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+}
+.table-container-heading h4{
+    margin: 0px;
+}
+.table-container-heading button{
+    background-color: black;
+    color: white;
+    border: none;
+    padding: 2px 15px;
+    border-radius: 5px;
+}
+table{
+    border-collapse: collapse ;
+    padding: 10px;
+    width: 100%;
+    text-align: center;
+}
+thead tr{
+    border: white;
+    font-weight: bold;
+    color: rgb(108, 105, 105);
+}
+tr{
+    border-top: 1px solid rgb(184, 184, 196);
+}
+td{
+    padding: 10px;
+}
+.product-container{
+    width: max-content;
+    width: calc(100% - 40px);
+    padding: 20px;
+    box-shadow: 0 0 2px rgb(152, 152, 175);
+    height: max-content;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    border-radius: 5px;
+    background-color: white;
+}
+.product-container h3{
+    margin: 0px;
+}
+.search-bar{
+    border: 1px solid black;
+    padding: 5px;
+    border-radius: 5px;
+}
+.search-bar input{
+    border: none;
+}
+.search-bar input:focus{
+    outline: none;
+}
+.search-bar img{
+    height: 10px;
+}
+.product-details-container{
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgb(152, 152, 175);
+    align-items: center;
+}
+.product-details{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap ;
+}
+.product-img img{
+    max-width: 78px;
+}
+h3, h2, h4{
+    margin: 0px;
+}

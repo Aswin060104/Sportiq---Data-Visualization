@@ -1,0 +1,97 @@
+<div class="main-container">
+    <app-admin-nav></app-admin-nav>
+    <div class="right-container">
+        <div class="dashboard-title" >
+            <div class="dashboard-title-left">
+                <h3>Welcome Admin</h3>
+                <p>27 January 2025</p>
+            </div>
+            <div class="dashboard-title-center">
+                <img src="assets/notification.png" alt="">
+            </div>
+            <div class="dashboard-title-right">
+                <!-- <input type="text" placeholder="Search" name="searchValue"> -->
+            </div>
+        </div>
+        <div class="clicked-product-container" *ngIf="isStockView || isPriceView ">
+            <h2 style="text-align: center;">Product Detail</h2>
+            <div class="clicked-product-main-container">
+                <div class="clicked-product-container-left">
+                    <img [src]="trackingProductImageUrl" alt="">
+                    <h3>{{trackingProductName}}</h3>
+                </div>
+                <div class="clicked-product-container-right" *ngIf="isStockView; else priceView">
+                    <table>
+                        <thead>
+                            <th>Stock</th>
+                            <th>Updated Date</th>
+                        </thead>
+                        <tr *ngFor="let stockDate of productStockDate">
+                            <td>{{stockDate.stock}} </td>
+                            <td>{{stockDate.date | date : 'medium'}} </td>
+                        </tr>
+                    </table>
+                </div>
+                <ng-template #priceView>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <th>Original Price</th>
+                                <th>Selling Price</th>
+                                <th>Discounted Price</th>
+                                <th>Discount</th>
+                                <th>Profit</th>
+                                <th>Date</th>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let product of productPriceDate">
+                                    <td>{{product.originalPrice}}</td>
+                                    <td>{{product.sellingPrice}}</td>
+                                    <td>{{product.discountedSellingPrice}}</td>
+                                    <td>{{product.discount}}</td>
+                                    <td>{{product.profit}}</td>
+                                    <td>{{product.date | date : 'short'}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </ng-template>
+            </div>
+        </div>
+        <div class="products-container">
+            <div class="products-container-head">
+                <h2>Products Stock and Price Tracking</h2>
+                <input type="text" placeholder="Search with product name" [(ngModel)]="searchBarValue">
+            </div>
+            <div class="products-card-container">
+                <ng-container *ngIf="checkSearchValueFound(); else notFound;">
+                    <ng-container *ngFor="let productName of productName">
+                        <div *ngIf="productName.toLowerCase().includes(searchBarValue?.toLowerCase() ?? '')"
+                            class="product-card">
+                            <div class="product-card-img">
+                                <img [src]="productNameId.get(productName)?.[1]" alt="">
+                                <!-- {{productNameId.get(productName)?.[1]}} -->
+                            </div>
+                            <div class="product-card-details">
+                                <h3>{{productName}}</h3>
+                                <div class="product-card-buttons">
+                                    <button id="view-stock"
+                                        (click)="getStockTrack(productName, productNameId.get(productName)?.[1] ?? '')">View
+                                        Stocks</button>
+                                    <button id="view-price"
+                                        (click)="getPriceTrack(productName, productNameId.get(productName)?.[1] ?? '')">View
+                                        Price</button>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-container>
+                </ng-container>
+            </div>
+            <ng-template #notFound>
+                <div class="products-container-head" style="width: 100%;">
+                    <p>No Products Not Found</p>
+                </div>
+            </ng-template>
+        </div>
+    </div>
+</div>

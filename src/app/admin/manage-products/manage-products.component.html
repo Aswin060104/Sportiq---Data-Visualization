@@ -1,0 +1,197 @@
+<div class="main-container">
+  <app-admin-nav></app-admin-nav>
+  <div class="right-container">
+
+
+    <div class="dashboard-title">
+      <div class="dashboard-title-left">
+        <h3>Welcome Admin</h3>
+        <p>27 January 2025</p>
+      </div>
+      <div class="dashboard-title-center">
+        <img src="assets/notification.png" alt="">
+      </div>
+      <div class="dashboard-title-right">
+        <!-- <input type="text" placeholder="Search" name="searchValue"> -->
+      </div>
+    </div>
+    <div class="table-container">
+      <div class="table-head">
+        <h4>Product List</h4>
+        <input type="text" placeholder="Search" [(ngModel)]="searchBarValue">
+      </div>
+      <table>
+        <thead>
+          <th>Name</th>
+          <th>Original Price</th>
+          <th>Selling Price</th>
+          <th>Discount</th>
+          <th>Stock </th>
+          <th><button type="submit" (click)="  toggleProductForm()">Add Product</button></th>
+        </thead>
+        <tbody>
+          <ng-container *ngIf="checkSearchValueFound(); else notFound"> 
+            <ng-container *ngFor="let product of products; let i=index">
+              <ng-container
+                *ngIf="product.productStatus && product.productName.toLowerCase().includes(searchBarValue.toLocaleLowerCase()) || searchBarValue.length == 0">
+                <tr *ngIf="product.productStatus">
+                  <td>{{product.productName}}</td>
+                  <td>{{product.productOriginalPrice }}</td>
+                  <td>{{product.productSellingPrice}}</td>
+                  <td>{{product.productDiscount != 0 ? (product.productDiscount / 100 | percent) : "-"}}</td>
+                  <td>{{product.productStock}}</td>
+                  <td>
+                    <div class="buttons-container-row">
+                      <button id="edit-btn" (click)="editProduct(product)">Edit</button>
+                      <button id="delete-btn" (click)="deleteProduct(product)">Delete</button>
+                    </div>
+                  </td>
+                </tr>
+              </ng-container>
+            </ng-container>  
+          </ng-container>
+          <ng-template #notFound>
+            <tr>
+              <td colspan="6">No Products Found</td>
+            </tr> 
+          </ng-template>
+        </tbody>
+      </table>
+    </div>
+    <div class="new-product-form" id="productForm"
+      [ngClass]="[showProductForm ? 'form-in' : stopInitialAnimation ? 'not-in-view' :'form-out']">
+
+      <!-- adding new Product -->
+      <form (ngSubmit)="addProduct()" #productForm="ngForm">
+        <div class="form-head">
+          <h1>{{ editProductDetails ? 'Edit Product Detail': 'New Product'}}</h1>
+          <div (click)="toggleProductForm()">
+            <img src="/assets/close.png" alt="close">
+          </div>
+        </div>
+        <label for="">Product Name :</label>
+        <input type="text" placeholder="Product Name" name="productName" [(ngModel)]="productName"
+          #templateProductName="ngModel" minlength="1" required [disabled]="editProductDetails">
+        <span
+          *ngIf="(productNameExist || templateProductName.invalid ) && (templateProductName.touched || productForm.submitted)">{{productNameExist
+          ? '*Product Name already Exists' : '*Invalid Product Name'}}</span>
+
+        <label for="">Original Price :</label>
+        <input type="number" placeholder="Original Price" name="productOriginalPrice" [(ngModel)]="productOriginalPrice"
+          #templateProductOriginalPrice="ngModel" min="1" required>
+        <span
+          *ngIf="templateProductOriginalPrice.invalid && (templateProductOriginalPrice.touched || productForm.submitted)">*Invalid
+          Price
+          Value</span>
+
+        <label for="">Selling Price :</label>
+        <input type="number" placeholder="Selling Price" name="productSellingPrice" [(ngModel)]="productSellingPrice"
+          #templateProductSellingPrice="ngModel" min="1" required>
+        <span
+          *ngIf="templateProductSellingPrice.invalid && (templateProductSellingPrice.touched || productForm.submitted)">*Invalid
+          Selling price</span>
+        <span *ngIf="productOriginalPrice > productSellingPrice && templateProductSellingPrice.valid">*Selling price
+          must
+          greater than original price</span>
+
+
+        <label for="productDiscount">Discount :</label>
+        <input type="number" placeholder="1 - 100" name="productDiscount" [(ngModel)]="productDiscount"
+          #templateProductDiscount="ngModel" min="0" max="100">
+        <span
+          *ngIf="templateProductDiscount.invalid && (templateProductDiscount.touched || productForm.submitted)">*Invalid
+          Discount</span>
+
+
+        <label for="">Stock Count :</label>
+        <input type="number" placeholder="Stock" name="productStock" [(ngModel)]="productStock"
+          #templateProductStock="ngModel" min="1" required>
+        <span
+          *ngIf="(templateProductStock.invalid || ( templateProductStock.value?.length == 0 || productStock == 0)) && (templateProductStock.touched || productForm.submitted)">*Invalid
+          Stock</span>
+
+        <label for="categoryName"> Category :</label>
+        <input type="text" placeholder="categoryName" [(ngModel)]="productCategory" name="categoryName"
+          (click)="showCategory()" (change)="showCategory()" #templateProductCategory="ngModel" required minlength="2"
+          [disabled]="editProductDetails">
+        <div class="category-options" *ngIf="showCategoryList || productCategory?.length != 0 ">
+          <ng-container *ngFor="let category of categoryKeys">
+            <ng-container *ngIf="productCategory != category">
+              <li *ngIf="productCategory != null && category.toLowerCase().includes(productCategory.toLowerCase())"
+                (click)="assignCategory(category)">{{category}}</li>
+            </ng-container>
+          </ng-container>
+        </div>
+        <span
+          *ngIf="templateProductCategory.invalid && (templateProductCategory.touched || productForm.submitted)">*Invalid
+          Category</span>
+
+
+        <label for="subcategoryName"> Subcategory :</label>
+        <input type="text" placeholder="subCategoryName" [(ngModel)]="productSubCategory" name="subcategoryName"
+          (click)="getSubCategory()" (change)="getSubCategory()" #templateProductSubcategory="ngModel" required
+          minlength="2" [disabled]="editProductDetails">
+        <div class="category-options" *ngIf="showSubCategoryList">
+          <ng-container *ngFor="let subCategory of subCategories">
+            <ng-container *ngIf="productSubCategory != subCategory">
+              <li
+                *ngIf="productSubCategory != null && subCategory.toLowerCase().includes(productSubCategory.toLowerCase())"
+                (click)="assignSubCategory(subCategory)">{{subCategory}}</li>
+            </ng-container>
+          </ng-container>
+        </div>
+        <span
+          *ngIf="templateProductSubcategory.invalid && (templateProductSubcategory.touched || productForm.submitted)">*Invalid
+          Category</span>
+
+
+        <div *ngIf="isNewCategory">
+          <label for="">Category Main Image URL :</label>
+          <input type="text" name="categoryMainImageUrl" placeholder="Category Main Image Url"
+            name="categoryMainImageUrl" [(ngModel)]="categoryMainImage" #templateCategoryMainImageUrl="ngModel"
+            minlength="1">
+          <span
+            *ngIf="templateCategoryMainImageUrl.invalid && (productForm.submitted || templateCategoryMainImageUrl.touched)">*Invalid
+            URL</span>
+        </div>
+
+
+        <div *ngIf="isNewCategory">
+          <label for="">Category Nav Image URL :</label>
+          <input type="text" name="categoryNavImageUrl" placeholder="Category Nav Image Url" name="categoryNavImageUrl"
+            [(ngModel)]="categoryNavImage" #templateCategoryNavImageUrl="ngModel" minlength="1">
+          <span
+            *ngIf="templateCategoryNavImageUrl.invalid && (productForm.submitted || templateCategoryNavImageUrl.touched)">*Invalid
+            URL</span>
+
+        </div>
+
+
+        <label for="">Product Image URL :</label>
+        <input type="text" name="productImageUrl" placeholder="ImageUrl" name="productImageUrl"
+          [(ngModel)]="productImageUrl" #templateProductImageUrl="ngModel" required minlength="1">
+        <span
+          *ngIf="templateProductImageUrl.invalid && (productForm.submitted || templateProductImageUrl.touched)">*Invalid
+          URL</span>
+
+        <label for="">Product Description : </label>
+        <input type="text" name="productDescription" placeholder="Product Description" [(ngModel)]="productDescription"
+          required minlength="1" #templateProductDescription="ngModel">
+        <span
+          *ngIf="templateProductDescription.invalid && (productForm.submitted || templateProductDescription.touched)">*Invalid
+          Description</span>
+
+        <div class="buttons-container" *ngIf="!editProductDetails ;else editButtons">
+          <button type="submit">Add Product</button>
+        </div>
+        <ng-template #editButtons>
+          <div class="buttons-container">
+
+            <button (click)="saveDetails()" type="button">Save</button>
+            <!-- <button id="cancel-btn" type="button" (click)="cancelEdit()">Cancel</button> -->
+
+          </div>
+        </ng-template>
+      </form>
+    </div>
+  </div>

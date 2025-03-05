@@ -1,0 +1,279 @@
+.container {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+
+}
+
+.right-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    overflow-y: scroll;
+    height: 100vh;
+    background-color: white;
+    position: relative;
+}
+
+.top-orders-container {
+    width: calc(100% - 80px);
+    height: 400px;
+    gap: 20px;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    margin: 20px;
+    align-items: center;
+}
+
+.top-orders-container>h2 {
+    margin: 0px;
+}
+
+.top-orders-cards-container {
+    display: flex;
+    flex-direction: row;
+    color: blue;
+    gap: 10px;
+    width: 100%;
+}
+
+.top-order-card {
+    display: flex;
+    flex-direction: row;
+    padding: 20px;
+    align-items: center;
+    width: 45%;
+    height: 90%;
+    background-color: rgb(239, 239, 250);
+    justify-content: center;
+    border-radius: 5px;
+}
+
+#topProduct1 {
+    height: 60% !important;
+    width: 75% !important;
+}
+
+#topProduct2 {
+    height: 60% !important;
+    width: 75% !important;
+}
+
+.table-container {
+    display: flex;
+    flex-direction: column;
+    padding: 10px 20px;
+    width: calc(100% - 80px);
+    place-self: center;
+    border-radius: 5px;
+    box-shadow: 0 0 2px rgb(124, 124, 221);
+    background-color: rgb(250, 250, 250);
+    margin: 20px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.table-head {
+    display: flex;
+    flex-direction: column;
+    row-gap: 10px;
+
+}
+.table-head-searchbar input{
+    width: 100%;
+    padding: 5px 10px;
+    border: none;
+    box-shadow: 0 0 2px  black;
+}
+.table-head-searchbar input:focus{
+    outline: none;
+    box-shadow: 0 0 2px 1px rgb(47, 47, 184);
+    border: none;
+}
+.table-head-title {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding-right: 20px;
+    align-items: center;
+}
+
+.table-head-options {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    align-items: center;
+    font-weight: 700;
+    padding: 10px 0px 10px 0px;
+}
+
+.table-head-options a {
+    cursor: pointer;
+    position: relative;
+}
+
+.table-head-options a:after {
+    position: absolute;
+    content: '';
+    height: 2px;
+    background-color: rgb(14, 0, 209);
+    top: 110%;
+    left: 0;
+}
+
+.table-head-options a:hover::after {
+    animation: underline forwards 0.3s;
+    width: 100%;
+    height: 3px;
+    border-radius: 5px;
+}
+
+@keyframes underline {
+    0% {
+        width: 1px;
+    }
+
+    100% {
+        width: 100%;
+    }
+}
+
+table {
+    border-collapse: collapse;
+    background-color: rgb(250, 250, 250);
+}
+
+thead {
+    border-bottom: 1px solid black;
+}
+
+table tr td {
+    border-top: 1px solid rgb(192, 190, 190);
+    padding: 10px;
+    text-align: center;
+}
+
+/* .table-container>table>tbody>tr:hover {
+    background-color: rgb(214, 214, 230);
+    cursor: pointer;
+    transition: 0.4s;
+    transform: scaleX(1.02);
+} */
+
+th {
+    border: 1px white;
+    padding: 10px;
+    color: rgb(92, 90, 90);
+}
+
+td > button {
+    border-radius: 5px;
+    padding: 5px 15px;
+    border: none;
+    color: white;
+}
+#view-details-btn{
+    background-color: rgb(148, 142, 118);
+}
+#view-details-btn:hover{
+    background-color: rgb(99, 96, 87);
+}
+.pending {
+    background-color: rgb(0, 69, 196);
+}
+.pending:hover{
+    background-color: blue;
+}
+.delivered {
+    background-color: green;
+}
+
+/* h1, h2, h3, h4{
+    margin: 0px;
+} */
+.order-details {
+    padding: 20px;
+    box-shadow: 0 0 1px blue;
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    place-self: center;
+    background-color: rgb(235, 240, 241);
+    border-radius: 5px;
+    z-index: 4;
+    position: relative;
+    transform: translate(50%);
+}
+.order-details-heading{
+    position: relative;
+}
+.order-details-heading img{
+    position: relative;
+    height: 20px;
+    top: 40%;
+    right: -100%;
+}
+.order-details-head {
+    display: flex;
+    flex-direction: row;
+    gap: 40px;
+}
+
+.order-details table {
+    width: 100%;
+}
+
+.show-order {
+    animation: show-order 1s forwards;
+}
+
+.hide-order {
+    animation: hide-order 2s forwards;
+}
+
+@keyframes show-order {
+    0% {
+        margin-bottom: -100%;
+    }
+
+    100% {
+        margin-top: 0%;
+    }
+}
+
+@keyframes hide-order {
+    0% {
+        margin-top: 0%;
+    }
+
+    100% {
+        margin-bottom: -100%;
+    }
+}
+.not-in-view{
+    margin-bottom: -100%;
+}
+.overlay{
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    width: 100%;
+    bottom: 0;
+    z-index: 4;
+    background-color: grey;
+    animation: color-change forwards 1.5s;
+}
+@keyframes color-change {
+    100%{
+        background-color: rgb(0, 0, 0,0.4);
+    }
+}
+.truncate-text {
+    max-width: 150px;  /* Adjust based on your needs */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  

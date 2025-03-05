@@ -1,0 +1,100 @@
+<div class="dashboard-container">
+    <app-admin-nav></app-admin-nav>
+    <div class="main-container">
+        <div class="dashboard-title">
+            <div class="dashboard-title-left">
+                <h3>Welcome Admin</h3>
+                <p>27 January 2025</p>
+            </div>
+            <div class="dashboard-title-center">
+                <img src="assets/notification.png" alt="">
+            </div>
+            <div class="dashboard-title-right">
+                <input type="text" placeholder="Search" name="searchValue" [(ngModel)]="searchValue" (ngModelChange)="onSearch()">
+            </div>
+        </div>
+        <div class="graph-container">
+            <div class="graph-container-left">
+                <div class="sales-profit-container">
+                    <div class="salary-card">
+                        <h3>Average Sales</h3>
+                        <div class="sales-chart-container">
+                            <div class="sales-chart"></div>
+                            <div class="sales-details">
+                                <h3>This Week <br> Sales</h3>
+                                <h2>{{totalSales / 7 | currency : 'INR'}}</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="order-card">
+                        <h3>Total Orders</h3>
+                        <div class="order-chart-container">
+                            <div id="orderChart" class="order-chart"></div>
+                            <div class="sales-details">
+                                <h4>Last Seven Days</h4>
+                                <h2><p style="font-size: 24px; display: inline;">{{totalOrders | number}} </p>Orders</h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="sales-vs-profit-container">
+                    <h3>Yearly Sales</h3>
+                    <div id="yearly-sales-chart" class="yearly-sales-chart"></div>
+                </div>
+                <div class="table-container">
+                    <div class="table-container-heading">
+                        <h4>Recent Invoice</h4>
+                    </div>
+                    <table>
+                        <thead>
+                            <th>No</th>
+                            <th>Email</th>
+                            <th>City</th>
+                            <th>State</th>
+                            <th>Sales</th>
+                        </thead>
+                        <tbody>
+                            <ng-container *ngFor="let order of recentOrders let i = index;">
+                                <tr *ngIf="i < 5">
+                                    <td>{{i + 1}}</td>
+                                    <td>{{order.email}}</td>
+                                    <td>{{order.city}}</td>
+                                    <td>{{order.state}}</td>
+                                    <td>{{order.totalPrice| currency : 'INR'}}</td>
+                                </tr>
+                            </ng-container>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+            <div class="graph-container-right">
+                <div class="new-user-container">
+                    <h3>New Users</h3>
+                    <div id="user-chart" class="user-chart"></div>
+                    <div class="new-user-details">
+                        <h1>140</h1>
+                        <h3> New Registration</h3>
+                    </div>
+                </div>
+                <div class="product-list-card"></div>
+                <div class="product-container" >
+                    <h3>Top Products</h3>
+                    <div class="product-details-container" *ngFor="let product of topSellingProducts">
+                        <div class="product-img">
+                            <img [src]="product.productImageUrl" alt="no">
+                        </div>
+                        <div class="product-details">
+                            <div>
+                                <h3>{{product.productName}}</h3>
+                            </div>
+                            <div>
+                                {{product.quantity}} sold
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

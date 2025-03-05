@@ -1,0 +1,285 @@
+li:hover{
+    background-color: rgb(218, 211, 211);
+    cursor: pointer;
+}
+li{
+    text-decoration: none;
+    list-style-type: none;
+}
+.main-container{
+    display: flex;
+    flex-direction: row;
+    overflow-y: hidden;
+}
+.right-container{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+    height: 100vh;
+    overflow-y: scroll;
+    background-color: rgb(238, 233, 233);
+}
+.dashboard-title{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+    box-shadow: 0 0 2px rgb(135, 135, 165);
+    background-color: white;
+}
+.dashboard-title-left h3, p{
+    margin: 0px;
+    margin-left: 20px;
+}
+.dashboard-title-center{
+    display: flex;
+    flex: 1;
+    align-items: end;
+    justify-content: end;
+}
+.dashboard-title-center img{
+    width: 25px;
+}
+.table-container{
+    display: flex;
+    flex-direction: column;
+    width: calc(100% - 80px);
+    padding: 10px 20px;
+    place-self: center;
+    border-radius: 5px;
+    box-shadow: 0 0 2px rgb(124, 124, 221);
+    background-color: white;
+    margin: 20px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.table-head{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+.table-head input{
+    width: 20%;
+    padding: 5px 10px;
+    border: none;
+    box-shadow: 0 0 2px  black;
+}
+.table-head input:focus{
+    outline: none;
+    box-shadow: 0 0 2px 1px rgb(47, 47, 184);
+    border: none;
+}
+table{
+    border-collapse: collapse;
+    background-color: rgb(255, 255, 255);
+}
+thead{
+    border-bottom: 1px solid black;
+}
+table tr td{
+    border-top: 1px solid rgb(192, 190, 190);
+    padding: 10px;
+    text-align: center;
+}
+.buttons-container-row{
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    align-items: center;
+    width: 100%;
+}
+#delete-btn{
+    border: none;
+    background-color: rgb(236, 4, 4);
+    padding: 5px 10px;
+    color: white;
+    border-radius: 5px;
+}
+#delete-btn:hover{
+    background-color: rgb(199, 2, 2);
+}
+th{
+    border: 1px white ;
+    padding: 10px;
+}
+thead button{
+    background-color: rgb(0, 3, 187);
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+}
+thead button:hover{
+    background-color: rgb(7, 7, 121);
+}
+#edit-btn{
+    color: white;
+    background-color: #04aa04;
+    padding: 5px 20px;
+    display: flex;
+    border: none;
+    place-self: center;
+    border-radius: 5px;
+}
+#edit-btn:hover{
+    background-color: rgb(1, 136, 1);
+}
+.new-product-form{
+    padding: 10px 20px;
+    position: absolute;
+    width: 40%;
+    background-color: white;
+    border: 1px rgb(171, 171, 172) solid;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: Arial, Helvetica, sans-serif;
+    height: calc(100vh - 20px);
+    overflow-y: scroll;
+}
+.form-in{
+    animation: show-form-in 1s forwards ease-in-out;
+}
+.form-out{
+    animation: show-form-out 1.2s forwards;
+}
+.not-in-view{
+    margin-top: -1000%;
+}
+@keyframes show-form-in {
+    0%{
+        margin-top: -110%;
+    }
+    100%{
+        margin-top: 0%;
+    }
+}
+@keyframes show-form-out {
+    0%{
+        margin-top: 0%;
+    }
+    10%{
+        margin-top: 5%;
+    }
+    100%{
+        margin-top: -110%;
+    }
+}
+form{
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    width: 90%;
+    gap: 10px;
+    align-items: left;
+    place-self: center;
+}
+.form-head{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.form-head h3{
+    margin: 0px;
+}
+.form-head img{
+    position: absolute;
+    height: 15px;
+    top: 6%;
+    right: 1%;
+}
+form label{
+    font-size: 18px;
+}
+form input, select, form div input{
+    border-radius: 5px;
+    align-self: center;
+    width: 90%;
+    padding: 10px 20px;
+    border: none;
+    box-shadow: 0px 0px 0px 1px rgb(0, 0, 0);
+}
+select{
+    width: 98%;
+    padding: 10px 10px;
+}
+.category-options-container{
+    position: relative;
+    width: 100%;
+}
+.category-options{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    background-color: rgb(243, 239, 239);
+    cursor: pointer;
+}
+.category-options > option{
+    padding: 5px 10px;
+    cursor: pointer;
+}
+.category-options > option:hover{
+    cursor: pointer;
+    background-color: rgb(212, 224, 228);
+}
+form input:focus, select:focus{
+    outline: none;
+    border: none;
+    border-color: rgb(222, 255, 37);
+    box-shadow: 0px 0px 0px 1px rgb(172, 202, 3);
+}
+.buttons-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+.buttons-container button{
+    margin-top: 10px;
+    color: white;
+    background-color: green;
+    padding: 10px 20px;
+    border: none;
+    width: 40%;
+    align-self: center;
+    justify-self: center;
+    border-radius: 5px;
+}
+.buttons-container button:hover{
+    background-color: rgb(2, 100, 2);
+}
+#cancel-btn{
+    background-color: rgb(255, 25, 25);
+}
+#cancel-btn:hover{
+    background-color: rgb(184, 1, 1);
+}
+.radio-buttons{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 20px;
+}
+.radio-buttons div input{
+    width: min-content;    
+    border: none;
+    box-shadow: 0 0 0 0 black;
+}
+.radio-buttons input:focus{
+    box-shadow: 0 0 0 0 black;
+}
+.overlay{
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    width: 100%;
+    bottom: 0;
+    z-index: 1;
+    animation: color-change forwards 1.5s;
+}
+@keyframes color-change {
+    100%{
+        background-color: rgb(0, 0, 0,0.4);
+    }
+}
