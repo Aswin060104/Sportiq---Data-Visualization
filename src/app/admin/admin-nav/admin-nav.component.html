@@ -4,10 +4,10 @@
         <li [routerLink]="'/dashboard'" [routerLinkActive]="'active'" [routerLinkActiveOptions] = "{ exact : true}">Dashboard</li>
         <li [routerLink]="'/analytics'" [routerLinkActive]="'active'"  [routerLinkActiveOptions] = "{exact :true}">Analytics</li>
         <li [routerLink]="'/demo-analytics'" [routerLinkActive]="'active'"  [routerLinkActiveOptions] = "{exact :true}">Demo Analytics</li>
-        <li>Manage Customers</li>
+        <li [routerLink]="'/customers'" [routerLinkActive]="'active'"  [routerLinkActiveOptions] = "{exact :true}">Manage Customers</li>
         <li [routerLink]="''" [routerLinkActive]="'active'"  [routerLinkActiveOptions] = "{exact :true}">Manage Products</li>
         <li [routerLink]="'/orders'" [routerLinkActive]="'active'"  [routerLinkActiveOptions] = "{exact :true}">Orders</li>
-        <li>Enquiry</li>
+        <!-- <li>Enquiry</li> -->
         <li [routerLink]="'/tracking'" [routerLinkActive]="'active'"  [routerLinkActiveOptions] = "{exact :true}">Tracking</li>
     </ul>
 </div>

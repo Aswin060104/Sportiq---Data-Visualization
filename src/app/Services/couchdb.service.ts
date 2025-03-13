@@ -28,9 +28,9 @@ export class CouchDbService {
   }
 
   searchDocs(query: string) {
-    const url = `${this.baseURL}/_design/search_indices/_search/global_search?q=default:${encodeURIComponent(query)}`;
+    const url = `${this.baseURL}/_design/search_indices/_search/global_search?q=default:"${encodeURIComponent(query)}"`;
     console.log(url);
-    return this.http.get(url, { headers: this.headers });
+    return this.http.get(url, { headers: this.headers }); 
   }
 
   /*****           Product Page services                *****/
@@ -127,7 +127,7 @@ export class CouchDbService {
   }
 
   /*****      Order Page          ****/
-  getAllOrders(limit? : number) {
+  getAllOrders() {
     const url = `${this.baseURL}/_design/Views/_view/order_by_orderdate?include_docs=true&reduce=false&descending=true`;
     return this.http.get<any>(url, { headers: this.headers })
   }
@@ -149,11 +149,6 @@ export class CouchDbService {
 
   getParticularCart(cartId: string) {
     const url = `${this.baseURL}/${cartId}`;
-    return this.http.get<any>(url, { headers: this.headers })
-  }
-
-  getCustomerDetails(customerId: string) {  // get particular user detail return whole doc
-    const url = `${this.baseURL}/${customerId}`;
     return this.http.get<any>(url, { headers: this.headers })
   }
 
@@ -179,5 +174,24 @@ export class CouchDbService {
     }
     const url = `${this.baseURL}/${orderId}`;
     return this.http.put<any>(url,{ _rev : revId , data : orderDetail }, { headers: this.headers });
+  }
+
+  getCustomerDetails(customerId: string) {  // get particular user detail return whole doc
+    const url = `${this.baseURL}/${customerId}`;
+    return this.http.get<any>(url, { headers: this.headers })
+  }
+
+  getAllCustomers(){
+    const url = `${this.baseURL}/_design/Views/_view/customer_by_email?include_docs=true`;
+    return this.http.get<any>(url, { headers: this.headers });   
+  }
+
+  // getAllCustomersMap(){
+  //   const url = `${this.baseURL}/_design/Views/_view/customer_by_email?`;
+  //   return this.http.get<any>(url, { headers: this.headers });   
+  // }
+  getAllCustomerAddress(){
+    const url = `${this.baseURL}/_design/Views/_view/customeraddress_by_email?include_docs=true`;
+    return this.http.get<any>(url, { headers: this.headers });
   }
 }

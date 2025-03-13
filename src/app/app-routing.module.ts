@@ -3,9 +3,10 @@ import { RouterModule, Routes } from '@angular/router';
 import { ManageProductsComponent } from './admin/manage-products/manage-products.component';
 import { TrackingComponent } from './admin/tracking/tracking.component';
 import { OrdersComponent } from './admin/orders/orders.component';
-import { AnalyticsComponent } from './admin/analytics/analytics.component';
+import { AnalyticsComponent } from './admin/static-analytics/static-analytics.component';
 import { DashboardComponent } from './admin/dashboard/dashboard.component';
-import { AdminNavBarComponent } from './admin/admin-nav-bar/admin-nav-bar.component';
+import { AdminNavBarComponent } from './admin/dynamic-analytics/dynamic-analytics.component';
+import { CustomersComponent } from './admin/customers/customers.component';
 
 const routes: Routes = [
   { path : '', component : ManageProductsComponent},
@@ -13,7 +14,8 @@ const routes: Routes = [
   { path : 'tracking', component : TrackingComponent},
   { path : 'orders', component : OrdersComponent},
   { path : 'analytics', component : AnalyticsComponent},
-  { path : 'demo-analytics', component : AdminNavBarComponent}
+  { path : 'demo-analytics', component : AdminNavBarComponent},
+  { path : 'customers', component : CustomersComponent}
 ];
 
 @NgModule({

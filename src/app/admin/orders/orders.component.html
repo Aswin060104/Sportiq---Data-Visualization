@@ -26,13 +26,14 @@
                 <div class="table-head-title">
                     <h2>Orders</h2>
                     <div class="table-head-searchbar">
-                        <input type="text" placeholder="Search" name="searchValue" [(ngModel)]="searchBarValue">
+                        <input type="text" placeholder="Search by Email" name="searchValue" [(ngModel)]="searchBarValue">
                     </div>
                 </div>
                 <div class="table-head-options">
-                    <!-- <a (click)="customView('all')">All Orders</a>
-                    <a (click)="customView('Pending')">Pending</a>
-                    <a (click)="customView('Delivered')">Delivered</a> -->
+                    <a (click)="modifyOrderView('all')" [ngClass]="{'active' : viewName === 'all'}">All Orders</a>
+                    <a (click)="modifyOrderView('recent')" [ngClass]="{'active' : viewName === 'recent'}">Recent</a>
+                    <a (click)="modifyOrderView('pending')" [ngClass]="{'active' : viewName === 'pending'}">Pending</a>
+                    <a (click)="modifyOrderView('delivered')" [ngClass]="{'active' : viewName === 'delivered'}">Delivered</a>
                 </div>
             </div>
             <table>
@@ -47,7 +48,7 @@
                 </thead>
                 <tbody>
                     <ng-container *ngIf="checkSearchValueFound(); else notFound">
-                        <ng-container *ngFor="let order of orderDataValue; let i = index;">
+                        <ng-container *ngFor="let order of filteredOrderData; let i = index;">
                             <tr *ngIf="order.email.toLowerCase().includes(searchBarValue.toLowerCase())">
                                 <!-- <td class="truncate-text" title="{{ order.orderId }}">{{order.orderId}}</td> -->
                                 <td>{{order.email}}</td>
@@ -55,7 +56,7 @@
                                 <td>{{order.totalPrice| currency : 'INR'}}</td>
                                 <td>{{order.city}}, {{order.state}}</td>
                                 <td><button (click)="updateOrderStatus(order)" [ngClass]="order.orderStatus == 'pending' ? 'pending' : 'delivered'">{{order.orderStatus.toUpperCase()}}</button></td>
-                                <td  (click)="getParticularOrderDetail(order.totalPrice)"><button id="view-details-btn">View Details </button> </td>    
+                                <td  (click)="getParticularOrderDetail(order)"><button id="view-details-btn">View Details </button> </td>    
                             </tr>
                         </ng-container>
                     </ng-container>
@@ -67,41 +68,36 @@
                 </tbody>
             </table>
         </div>
-        <table *ngIf="showOrderDetails">
-            <thead>
-                <th>Product Name</th>
-                <th>Price</th>
-                <th>Quantity</th>
-                <th>Amount</th>
-            </thead>
-           <tbody>
-            <tr *ngFor="let product of orderDetails">
-               <td>{{product.productName}}</td> 
-               <td>{{product.discountedSellingPrice / product.quantity}}</td> 
-               <td>{{product.quantity}}</td> 
-               <td>{{product.discountedSellingPrice}}</td> 
-            </tr>
-            <tr>
-                <td></td>
-                <td></td>
-                <td>Total Price</td>
-                <td>{{particularOrderTotalPrice | currency : 'INR'}}</td>
-            </tr>
-           </tbody>
-        </table>
-        
- <!-- <div [ngClass]="{'overlay' : showOrderDetails}" (click)="toggleOrderDetailView()"></div> -->
+   </div>
+   <div class="order-details" [ngClass]="[showOrderDetails ? 'show-order' : (stopInitialAnimation ? 'not-in-view'  :  'hide-order')]">
+    <div class="order-details-heading">
+        <h1>Orders Details</h1>
+        <img src="assets\close.png" alt="" (click)="toggleOrderDetailView()">
     </div>
-    <!-- <div class="order-details" [ngClass]="[showOrderDetails ? 'show-order' : !stopInitialAnimation ? 'hide-order' : 'not-in-view']">
-        <div class="order-details-heading">
-            <h1>Orders Details</h1>
-            <img src="assets\close.png" alt="" (click)="toggleOrderDetailView()">
-        </div>
-        <div class="order-details-head">
-            <h4>Name : {{particularOrder.name }}</h4>
-            <h4>Email : {{particularOrder.email }}</h4>
-            <h4>Ordered Date : {{particularOrder.orderDate | date : 'short'}}</h4>
-        </div> -->
-        
-    <!-- </div>  -->
-<!-- </div> -->
+    <div class="order-details-head">
+        <h4>Email : {{clickedOrderDetail.email }}</h4>
+        <h4>Ordered Date : {{clickedOrderDetail.orderDate | date : 'shortDate'}}</h4>
+    </div>
+    <table>
+        <thead>
+            <th>Product Name</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Amount</th>
+        </thead>
+       <tbody>
+        <tr *ngFor="let product of orderDetails">
+           <td>{{product?.productName}}</td> 
+           <td>{{product?.discountedSellingPrice}}</td> 
+           <td>{{product?.quantity}}</td> 
+           <td>{{product.quantity * product.discountedSellingPrice}}</td> 
+        </tr>
+        <tr>
+            <td></td>   
+            <td></td>
+            <td>Total Price</td>
+            <td>{{particularOrderTotalPrice | currency : 'INR'}}</td>
+        </tr>
+       </tbody>
+    </table>
+</div>

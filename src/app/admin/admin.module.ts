@@ -6,9 +6,10 @@ import { RouterModule } from '@angular/router';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ManageProductsComponent } from './manage-products/manage-products.component';
 import { TrackingComponent } from './tracking/tracking.component';
-import { AnalyticsComponent } from './analytics/analytics.component';
+import { AnalyticsComponent } from './static-analytics/static-analytics.component';
 import { OrdersComponent } from './orders/orders.component';
-import { AdminNavBarComponent } from './admin-nav-bar/admin-nav-bar.component';
+import { AdminNavBarComponent } from './dynamic-analytics/dynamic-analytics.component';
+import { CustomersComponent } from './customers/customers.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { AdminNavBarComponent } from './admin-nav-bar/admin-nav-bar.component';
     TrackingComponent,
     AnalyticsComponent,
     OrdersComponent,
-    AdminNavBarComponent
+    AdminNavBarComponent,
+    CustomersComponent
   ],
   imports: [
     CommonModule,

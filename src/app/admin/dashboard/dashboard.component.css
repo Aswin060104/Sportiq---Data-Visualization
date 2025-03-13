@@ -149,7 +149,8 @@
     text-align: left;
 }
 .user-chart{
-    width: 100%;
+    width: 65%;
+    height: 160px;
 }
 .new-user-details{
     display: flex;

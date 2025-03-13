@@ -1,4 +1,5 @@
-export interface OrderDetailToDisplay{ 
+export interface OrderDetailToDisplay{
+    orderId : string,
     customerAddressId : string,
     email: string, 
     city: string, 

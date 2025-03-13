@@ -4,7 +4,6 @@ import { AppComponent } from './app.component';
 import { Router, RouterModule } from '@angular/router';
 import { AppRoutingModule } from './app-routing.module';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { AdminNavBarComponent } from './admin/admin-nav-bar/admin-nav-bar.component';
 import { DatePipe } from '@angular/common';
 import { AdminModule } from './admin/admin.module';
 

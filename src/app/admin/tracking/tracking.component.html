@@ -1,7 +1,7 @@
 <div class="main-container">
     <app-admin-nav></app-admin-nav>
     <div class="right-container">
-        <div class="dashboard-title" >
+        <div class="dashboard-title">
             <div class="dashboard-title-left">
                 <h3>Welcome Admin</h3>
                 <p>27 January 2025</p>
@@ -21,39 +21,59 @@
                     <h3>{{trackingProductName}}</h3>
                 </div>
                 <div class="clicked-product-container-right" *ngIf="isStockView; else priceView">
-                    <table>
-                        <thead>
-                            <th>Stock</th>
-                            <th>Updated Date</th>
-                        </thead>
-                        <tr *ngFor="let stockDate of productStockDate">
-                            <td>{{stockDate.stock}} </td>
-                            <td>{{stockDate.date | date : 'medium'}} </td>
-                        </tr>
-                    </table>
-                </div>
-                <ng-template #priceView>
-                    <div class="table-container">
+
+                    <button (click)="toggleGraphView()">{{toggleButtonValue}}</button>
+
+                    <div class="graph-container" *ngIf="!isTableView; else stockView">
+
+                    </div>
+                    <ng-template #stockView>
                         <table>
                             <thead>
-                                <th>Original Price</th>
-                                <th>Selling Price</th>
-                                <th>Discounted Price</th>
-                                <th>Discount</th>
-                                <th>Profit</th>
-                                <th>Date</th>
+                                <th>Stock</th>
+                                <th>Updated Date</th>
                             </thead>
-                            <tbody>
-                                <tr *ngFor="let product of productPriceDate">
-                                    <td>{{product.originalPrice}}</td>
-                                    <td>{{product.sellingPrice}}</td>
-                                    <td>{{product.discountedSellingPrice}}</td>
-                                    <td>{{product.discount}}</td>
-                                    <td>{{product.profit}}</td>
-                                    <td>{{product.date | date : 'short'}}</td>
-                                </tr>
-                            </tbody>
+                            <tr *ngFor="let stockDate of productStockDate">
+                                <td>{{stockDate.stock}} </td>
+                                <td>{{stockDate.date | date : 'medium'}} </td>
+                            </tr>
                         </table>
+                    </ng-template>
+
+                </div>
+                <ng-template #priceView>
+                    <div class="clicked-product-container-right">
+                        <button (click)="toggleGraphView()">{{toggleButtonValue}}</button>
+                        <div class="graph-container" *ngIf="!isTableView;else tableView">
+                            <select name="priceLabel" id="" [(ngModel)]="selectedColumnLabel"
+                                (ngModelChange)="changePriceData()">
+                                <option [value]="label" *ngFor="let label of priceLabels">{{label}}</option>
+                            </select>
+                        </div>
+                        <ng-template #tableView>
+                            <div class="table-container">
+                                <table>
+                                    <thead>
+                                        <th>Original Price</th>
+                                        <th>Selling Price</th>
+                                        <th>Discounted Price</th>
+                                        <th>Discount</th>
+                                        <th>Profit</th>
+                                        <th>Date</th>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let product of productPriceDate">
+                                            <td>{{product.originalPrice}}</td>
+                                            <td>{{product.sellingPrice}}</td>
+                                            <td>{{product.discountedSellingPrice}}</td>
+                                            <td>{{product.discount}}</td>
+                                            <td>{{product.profit}}</td>
+                                            <td>{{product.date | date : 'short'}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </ng-template>
                     </div>
                 </ng-template>
             </div>

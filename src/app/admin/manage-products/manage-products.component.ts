@@ -94,7 +94,7 @@ export class ManageProductsComponent {
       productSubCategoryId: this.subCategoryIdName.get(this.productSubCategory) ?? "",
       productOriginalPrice: this.productOriginalPrice,
       productSellingPrice: this.productSellingPrice,
-      productDiscount: this.productDiscount,
+      productDiscount: this.productDiscount ?? 0,
       discountedSellingPrice: this.discountedSellingPrice,
       productStock: this.productStock,
       productImageUrl: this.productImageUrl,
