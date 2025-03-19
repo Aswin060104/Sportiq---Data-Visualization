@@ -13,7 +13,8 @@
                 <!-- <input type="text" placeholder="Search" name="searchValue"> -->
             </div>
         </div>
-        <div class="clicked-product-container" *ngIf="isStockView || isPriceView ">
+        <div class="clicked-product-container" *ngIf="isStockView || isPriceView; else allProducts">
+            <button (click)="showAllProducts()">Back to All Products</button>
             <h2 style="text-align: center;">Product Detail</h2>
             <div class="clicked-product-main-container">
                 <div class="clicked-product-container-left">
@@ -78,40 +79,42 @@
                 </ng-template>
             </div>
         </div>
-        <div class="products-container">
-            <div class="products-container-head">
-                <h2>Products Stock and Price Tracking</h2>
-                <input type="text" placeholder="Search with product name" [(ngModel)]="searchBarValue">
-            </div>
-            <div class="products-card-container">
-                <ng-container *ngIf="checkSearchValueFound(); else notFound;">
-                    <ng-container *ngFor="let productName of productName">
-                        <div *ngIf="productName.toLowerCase().includes(searchBarValue?.toLowerCase() ?? '')"
-                            class="product-card">
-                            <div class="product-card-img">
-                                <img [src]="productNameId.get(productName)?.[1]" alt="">
-                                <!-- {{productNameId.get(productName)?.[1]}} -->
-                            </div>
-                            <div class="product-card-details">
-                                <h3>{{productName}}</h3>
-                                <div class="product-card-buttons">
-                                    <button id="view-stock"
-                                        (click)="getStockTrack(productName, productNameId.get(productName)?.[1] ?? '')">View
-                                        Stocks</button>
-                                    <button id="view-price"
-                                        (click)="getPriceTrack(productName, productNameId.get(productName)?.[1] ?? '')">View
-                                        Price</button>
+        <ng-template #allProducts>
+            <div class="products-container">
+                <div class="products-container-head">
+                    <h2>Products Stock and Price Tracking</h2>
+                    <input type="text" placeholder="Search with product name" [(ngModel)]="searchBarValue">
+                </div>
+                <div class="products-card-container">
+                    <ng-container *ngIf="checkSearchValueFound(); else notFound;">
+                        <ng-container *ngFor="let productName of productName">
+                            <div *ngIf="productName.toLowerCase().includes(searchBarValue?.toLowerCase() ?? '')"
+                                class="product-card">
+                                <div class="product-card-img">
+                                    <img [src]="productNameId.get(productName)?.[1]" alt="">
+                                    <!-- {{productNameId.get(productName)?.[1]}} -->
+                                </div>
+                                <div class="product-card-details">
+                                    <h3>{{productName}}</h3>
+                                    <div class="product-card-buttons">
+                                        <button id="view-stock"
+                                            (click)="getStockTrack(productName, productNameId.get(productName)?.[1] ?? '')">View
+                                            Stocks</button>
+                                        <button id="view-price"
+                                            (click)="getPriceTrack(productName, productNameId.get(productName)?.[1] ?? '')">View
+                                            Price</button>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        </ng-container>
                     </ng-container>
-                </ng-container>
-            </div>
-            <ng-template #notFound>
-                <div class="products-container-head" style="width: 100%;">
-                    <p>No Products Not Found</p>
                 </div>
-            </ng-template>
-        </div>
+                <ng-template #notFound>
+                    <div class="products-container-head" style="width: 100%;">
+                        <p>No Products Not Found</p>
+                    </div>
+                </ng-template>
+            </div>
+        </ng-template>
     </div>
 </div>

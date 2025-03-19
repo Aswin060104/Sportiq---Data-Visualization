@@ -14,17 +14,17 @@
                     </ng-container>
                 </div>
                 <div class="objects-container" *ngIf="selectedObjects.length != 0">
-                    <h3> X-axis : </h3>
+                    <h3> Row : </h3>
                     <ng-container *ngFor="let rowLabel of rowLabelsKeys;let i=index">
                         <div class="field-card">
                            <input type="radio" name="rowLabel" [id]="rowLabel" [value]="rowLabel"
                                 [checked]="rowLabels.get(rowLabel)" (change)="toggleLabelValue('row', rowLabel)">
-                                <button>  <label [for]="rowLabel">{{rowLabel}}</label></button>
+                            <label [for]="rowLabel">{{rowLabel}}</label>
                         </div>
                     </ng-container>
                 </div>
                 <div class="objects-container" *ngIf="selectedRowLabel">
-                    <h3> Y1-axis :</h3>
+                    <h3> Column :</h3>
                     <ng-container *ngFor="let columnLabel of possibleColumnLabelsKeys;let i=index">
                         <div class="field-card">
                             <input type="radio" name="columnLabel" [id]="columnLabel" [value]="columnLabel"
@@ -35,7 +35,7 @@
                     </ng-container>
                 </div>
                 <div class="objects-container" *ngIf="selectedChart != 'pie' && additionalLabelsKeys.length != 0">
-                    <h3> Y2-axis : </h3>
+                    <h3> compare : </h3>
                     <ng-container *ngFor="let columnLabel of additionalLabelsKeys;let i=index">
                         <div class="field-card">
                             <input type="checkbox" [id]="'additional'+columnLabel" [value]="columnLabel"
@@ -56,10 +56,24 @@
                     </div>
                     <h3>Filters</h3>
                     <div>
-                        <input type="radio" name="sort-options" id="ascendingOrder" (click)="sortData('ascending')">
+                        <input type="radio" name="sort-options" id="ascendingOrder" (click)="sortData('ascending')" (keydown.enter)="sortData('ascending')">
                         <label for="ascendingOrder">Ascending order</label>
-                        <input type="radio" name="sort-options" id="DescendingOrder" (click)="sortData('descending')">
+                        <input type="radio" name="sort-options" id="DescendingOrder" (click)="sortData('descending')" (keydown.enter)="sortData('descending')">
                         <label for="DescendingOrder">Descending order</label>
+                        <br>
+                        <label for="filterValue">Max Range : </label>
+                        <input type="number" name="filterValue" [(ngModel)]="filterValue" (change)="sortData('basedOnValue')">
+                        <!-- <input type="color" name="filterValue">                  -->
+                        <select name="particularCity" [(ngModel)]="selectedParticularCity" id="ParticularCity" (change)="showDetailedProduct()">City Name:
+                            <ng-container *ngFor="let cityName of cityNames">
+                                <option [value]="cityName">{{cityName}}</option>
+                            </ng-container>
+                         </select>
+                          <select name="particularProduct" [(ngModel)]="selectedParticularProduct" id="particularProduct" (change)="showDetailedProduct()">Product Name:
+                            <ng-container *ngFor="let productName of productNames">
+                                <option [value]="productName">{{productName}}</option>
+                            </ng-container>
+                         </select>
                     </div>
                 </div>
             </div>

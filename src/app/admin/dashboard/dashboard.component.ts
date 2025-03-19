@@ -20,8 +20,19 @@ export class DashboardComponent {
 
     if (this.searchValue.trim()) {
       this.dbConnector.searchDocs(this.searchValue).subscribe({
-        next: (response) => {
+        next: (response : any) => {
           console.log(response);
+          response.rows.forEach( (e : any) => console.log(e.id))
+          let allProducts =  response.rows.map( (e : any) => this.dbConnector.getParticularDoc(e.id).pipe(map(product => ({name : product.data.productName, price : product.data.productOriginalPrice}))));
+          forkJoin(allProducts).subscribe({
+            next : (productDetail) =>{
+              console.log(productDetail);
+              console.log("INSIDE")
+            },
+            error : (error) => {
+              console.log(error);
+            }
+          })
         },
         error: (error) => {
           console.log(error);

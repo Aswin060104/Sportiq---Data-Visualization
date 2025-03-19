@@ -15,6 +15,8 @@ export class CustomersComponent {
 
   customerDetails : Customer[] = []
   customerAddresses : CustomerAddress[] = [];
+  searchBarValue : string = ""
+  isValueFound : boolean = false;
 
   ngOnInit(){
     this.getAllCustomerAddress();
@@ -47,5 +49,12 @@ export class CustomersComponent {
         console.log(error);
       }
     })
+  }
+
+  checkSearchValueFound(){
+    this.isValueFound = this.customerDetails.some((e : any) => {
+      return e.email.includes(this.searchBarValue.toLowerCase());
+    })
+    return this.searchBarValue.length === 0 ? true : this.isValueFound;
   }
 }

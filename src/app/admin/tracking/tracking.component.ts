@@ -21,8 +21,10 @@ export class TrackingComponent {
   isPriceView : boolean = false;
   isTableView : boolean = false;
   toggleButtonValue : string = "View as Table"
-  selectedColumnLabel : string = "";
+  selectedColumnLabel : string = "originalPrice";
   priceLabels : string[] = ["sellingPrice","profit","discountedSellingPrice","originalPrice","discount"];
+
+  toggleDetailView : boolean = false;
 
   searchBarValue : string = "";
   isValueFound : boolean = true;
@@ -52,6 +54,8 @@ export class TrackingComponent {
   getStockTrack(productName : string, productImageUrl : string){
     this.isStockView = true;
     this.isPriceView = false;
+    console.log(productName);
+    
     this.dbConnector.getParticularProductStock(productName).subscribe({
       next :(response) => {
         console.log(response);
@@ -95,7 +99,7 @@ export class TrackingComponent {
         console.log(this.productPriceDate);
         console.log("calling");
         
-        this.drawChart('line','Price');
+        this.drawChart('bar','Price');
       },
       error(error : any){
         console.log(error);
@@ -107,7 +111,7 @@ export class TrackingComponent {
     this.columnData = []
     this.columnData = this.productPriceDate.map((e : any) => e[this.selectedColumnLabel])
     console.log(this.columnData);
-    this.drawChart('line','Price'); 
+    this.drawChart('bar','Price'); 
   }
 
   toggleGraphView(){
@@ -118,11 +122,16 @@ export class TrackingComponent {
       this.toggleButtonValue = "View as Table"
       setTimeout(() => {
         if(this.isPriceView)
-          this.drawChart('line','Price');    
+          this.drawChart('bar','Price');    
         else    
           this.drawChart('bar','Stocks');
       }, 100);
     }
+  }
+  
+  showAllProducts(){
+    this.isPriceView = false;
+    this.isStockView = false;
   }
 
   checkSearchValueFound(){

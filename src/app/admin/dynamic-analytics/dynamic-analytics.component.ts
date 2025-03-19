@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ElementRef, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef } from '@angular/core';
 import { CouchDbService } from '../../Services/couchdb.service';
 import * as d3 from 'd3';
 import { HttpClient } from '@angular/common/http';
@@ -21,7 +21,7 @@ interface Order {
   orderDate: string;
   totalPrice: number;
 }
-
+interface ProductDetail {sales: number; quantity: number; orderCount: number }
 @Component({
   selector: 'dynamic-analytics',
   templateUrl: './dynamic-analytics.component.html',
@@ -63,10 +63,19 @@ export class AdminNavBarComponent {
   additionalColumnLabel: string = "";
 
   productData: Map<string, { sales: number, profit: number, quantity: number, orderCount: number, discountedSellingPrice: number, originalPrice: number, stock: number, discount: number }> = new Map();
+  
+  productDetailRecord: Record<string,{
+    cityData : Record<string, ProductDetail>;
+    stateData : Record<string, ProductDetail>
+  } > = {};
+  
+  selectedParticularProduct : string = "";
+  selectedParticularCity : string = "";
+
   categoryData: Map<string, { sales: number, profit: number, quantity: number, orderCount: number }> = new Map();
   subCategoryData: Map<string, { sales: number, orderCount: number, quantity: number }> = new Map();
 
-  cityData: Map<string, { sales: number, quantity: number, orderCount: number, customerCount: number }> = new Map();
+  cityData: Map<string, { sales: number, quantity: number, orderCount: number }> = new Map();
   cityCustomersCount: Map<string, number> = new Map();
   stateCustomersCount: Map<string, number> = new Map();
   customerData: Map<string, { sales: number, orderCount: number }> = new Map();
@@ -79,16 +88,10 @@ export class AdminNavBarComponent {
   mappedRowColumn: Map<string, string[]> = new Map();
   mappedObjectLabels: Map<string, string[]> = new Map();
   additionalColumnsMap: Map<string, string[]> = new Map();
-  tickedCount: number = 0;
-
+  filterValue : number = 20;
   columnData: number[] = [];
   columnData2: number[] = [];
   temColumnData: any = [];
-
-  comparisonField1: string = "";
-  comparisonField2: string = "";
-  comparisonDataField1: number[] = [];
-  comparisonDataField2: number[] = [];
 
   ngOnInit(): void {
     this.fetchOrders();
@@ -106,14 +109,13 @@ export class AdminNavBarComponent {
     this.mappedObjectLabels.set("Order", ["Orders Count", "Order Date", "Sales", "Items Sold", "City", "State"]);
     this.mappedObjectLabels.set("Customer", ["Customer"]);
     this.mappedObjectLabels.set("Category", ["Category"]);
-
     this.additionalColumnsMap.set("Selling Price", ["Original Price"]);
     this.additionalColumnsMap.set("Original Price", ["Selling Price"]);
     this.additionalColumnsMap.set("Orders Count", ["Items Sold"]);
     this.additionalColumnsMap.set("Items Sold",["Orders Count"]);
-    // use Array in the above
-    console.log(this.maxDate);
     
+    // use Array in the above
+    console.log(this.maxDate); 
   }
 
   get rowLabelsKeys(): string[] {
@@ -130,6 +132,14 @@ export class AdminNavBarComponent {
 
   get additionalLabelsKeys() : string[] {
     return Array.from(this.additionalLabels.keys());
+  }
+
+  get productNames() : string[] {
+    return Array.from(this.productData.keys());
+  }
+
+  get cityNames() : string[] {
+    return Array.from(this.cityData.keys());
   }
 
   fetchOrders() {
@@ -228,14 +238,38 @@ export class AdminNavBarComponent {
       let sales: number = (this.productData.get(order.productName)?.sales ?? 0) + order.totalPrice;
       let orderCount: number = (this.productData.get(order.productName)?.orderCount ?? 0) + 1;
       this.productData.set(order.productName, { sales: sales, quantity: quantity, profit: profit, orderCount: orderCount, discountedSellingPrice: order.discountedSellingPrice, originalPrice: order.originalPrice, stock: order.stock, discount: order.discount });
-      // console.log(order.city); no vnr
+      
+      //Initialize particular product if not present
+      if(!this.productDetailRecord[order.productName])
+        this.productDetailRecord[order.productName] = {cityData : {}, stateData : {}}
+      
+      //Initialize city data if not present
+      if (!this.productDetailRecord[order.productName].cityData[order.city]) {
+        this.productDetailRecord[order.productName].cityData[order.city] = { sales: 0, quantity: 0, orderCount: 0 };
+      }
+
+      this.productDetailRecord[order.productName].cityData[order.city].sales += order.totalPrice;
+      this.productDetailRecord[order.productName].cityData[order.city].quantity += order.quantity;
+      this.productDetailRecord[order.productName].cityData[order.city].orderCount += 1;
+    
+      // Update State Data
+      if (!this.productDetailRecord[order.productName].stateData[order.state]) {
+        this.productDetailRecord[order.productName].stateData[order.state] = { sales: 0, quantity: 0, orderCount: 0 };
+      }
+
+      this.productDetailRecord[order.productName].stateData[order.state].sales += order.totalPrice;
+      this.productDetailRecord[order.productName].stateData[order.state].quantity += order.quantity;
+      this.productDetailRecord[order.productName].stateData[order.state].orderCount += 1;
+      
+      console.log("Record");
+      console.log(this.productDetailRecord)
 
       quantity = (this.cityData.get(order.city)?.quantity ?? 0) + order.quantity;
       sales = (this.cityData.get(order.city)?.sales ?? 0) + order.totalPrice;
       orderCount = (this.cityData.get(order.city)?.orderCount ?? 0) + 1;
+      
       let customerCount = this.cityCustomersCount.get(order.city) ?? 1;
-      this.cityData.set(order.city, { sales: sales, orderCount: orderCount, quantity: quantity, customerCount: customerCount });
-
+      this.cityData.set(order.city, { sales: sales, orderCount: orderCount, quantity: quantity });
       sales = (this.stateSales.get(order.state)?.sales ?? 0) + order.totalPrice;
       orderCount = (this.stateSales.get(order.state)?.orderCount ?? 0) + 1;
       this.stateSales.set(order.state, { sales: sales, orderCount: orderCount });
@@ -369,14 +403,15 @@ export class AdminNavBarComponent {
   }
 
   updateGraph() {
+    
     this.temColumnData = []
     this.columnData2 = [];
     switch (this.selectedRowLabel) {
       case "Products Name":
         this.labels = [];
         this.columnData = [];
-        this.productData.forEach((value, key) => { 
-          if(value.sales !== 0 ||  this.mappedObjectLabels.get("Product")?.includes(this.selectedColumnLabel)) {
+        this.productData.forEach((value, key, index) => { 
+          if((value.sales !== 0 ||  this.mappedObjectLabels.get("Product")?.includes(this.selectedColumnLabel))) {
             this.labels.push(key); 
             this.temColumnData.push(value);
           }
@@ -476,7 +511,7 @@ export class AdminNavBarComponent {
     this.additionalColumnLabel = "";
   }
 
-  sortData(sortingType : 'ascending' | 'descending'){
+  sortData(sortingType : 'ascending' | 'descending' | 'basedOnValue'){
     let combinedData = this.columnData.map((value, index) => ({data1 :value, label : this.labels[index], data2 : this.columnData2[index]}));
     if(sortingType === 'ascending')
       combinedData.sort((a,b) => a.data1 - b.data1)
@@ -493,12 +528,62 @@ export class AdminNavBarComponent {
     this.drawChart();
   }
 
+  // cityNames : string[] = []
+
+  showDetailedProduct(){
+    if(this.selectedObjects.includes('Product') && this.selectedObjects.includes('Order')){
+      this.labels = [];
+      this.columnData = [];
+      console.log("LABEL");
+      
+      console.log(this.selectedRowLabel);
+      
+      if(this.selectedRowLabel === 'City'){  // (city wise single product) stores the value of cities based on the particular products
+      this.cityData.clear();
+        Object.keys(this.productDetailRecord[this.selectedParticularProduct].cityData).forEach((cityName) => {
+          this.cityNames.push(cityName);
+          let sales : number = this.productDetailRecord[this.selectedParticularProduct].cityData[cityName].sales ?? 0;
+          let quantity : number = this.productDetailRecord[this.selectedParticularProduct].cityData[cityName].quantity ?? 0;
+          let orderCount : number = this.productDetailRecord[this.selectedParticularProduct].cityData[cityName].orderCount ?? 0;
+          this.cityData.set(cityName, {sales : sales, quantity : quantity, orderCount : orderCount});
+        })
+      }
+      else if(this.selectedRowLabel === 'Products Name'){ // (singe city wise products) stores value of each product based on selected city
+        console.log(this.productData);
+        Object.keys(this.productDetailRecord).forEach((productName) => {
+          let totalSales : number = this.productDetailRecord[productName].cityData[this.selectedParticularCity]?.sales ?? 0;
+          let quantity : number = this.productDetailRecord[productName].cityData[this.selectedParticularCity]?.quantity ?? 0;
+          let orderCount : number = this.productDetailRecord[productName].cityData[this.selectedParticularCity]?.orderCount ?? 0;
+          let particularProductData = this.productData.get(productName) ?? {sales : 0, orderCount : 0, discount : 0, originalPrice : 0, profit : 0, discountedSellingPrice :0, quantity : 0, stock : 0};
+          this.productData.set(productName, {...particularProductData, sales : totalSales, quantity : quantity, orderCount : orderCount});
+          console.log(this.productData);
+        })
+      }
+        console.log("UPDATED");
+        console.log(this.productData);
+        // console.log(this.cityData);
+        // console.log(this.labels);
+        // console.log(this.columnData);
+    }
+    console.log("Updating");
+    
+    this.updateGraph();
+  }
+
   drawChart(): void {
     const container = this.el.nativeElement.querySelector('.chart-container');
     const containerWidth = container.clientWidth || 500;
     const width = containerWidth;
     const height = 500;
     const margin = { top: 20, right: 30, bottom: 100, left: 60 };
+
+    if(this.filterValue > 20 || this.filterValue < 1){
+      this.filterValue = this.labels.length < 20 ? this.labels.length : 20;
+    }
+    console.log(this.filterValue)
+    let filteredLabels = this.labels.slice( 0, this.filterValue);
+    let filteredColumnData = this.columnData.slice( 0, this.filterValue);
+    let filteredColumnData2 = this.columnData2.slice( 0, this.filterValue);
 
     // Remove any existing chart before drawing
     d3.select(container).select('svg').remove();
@@ -516,13 +601,13 @@ export class AdminNavBarComponent {
       .attr('class', 'tooltip');
     // Common X and Y scales for bar and line charts
     const x = d3.scaleBand()
-      .domain(this.labels)
+      .domain(filteredLabels)
       .range([0, width - margin.left - margin.right])
       .padding(0.7);
 
     const maxDataValue = d3.max([
-      ...this.columnData ?? [],
-      ...this.columnData2 ?? []
+      ...filteredColumnData ?? [],
+      ...filteredColumnData2 ?? []
     ]) ?? 0;
 
     const y = d3.scaleLinear()
@@ -530,10 +615,10 @@ export class AdminNavBarComponent {
       .nice()
       .range([height - margin.top - margin.bottom, 0]);
 
-    const combinedData = this.labels.map((label, i) => ({
+    const combinedData = filteredLabels.map((label, i) => ({
       label,
-      value1: this.columnData[i] ?? 0,  // First dataset
-      value2: this.columnData2?.[i] ?? null, // Second dataset (optional)
+      value1: filteredColumnData[i] ?? 0,  // First dataset
+      value2: filteredColumnData2?.[i] ?? null, // Second dataset (optional)
     }));
 
     if (this.additionalColumnLabel != "" && this.selectedChart != 'pie' && this.selectedChart != "")
@@ -550,14 +635,14 @@ export class AdminNavBarComponent {
         .attr('transform', (d) => `translate(${x(d.label)!}, 0)`);
 
       // Define bar width
-      const barWidth = x.bandwidth() / (this.columnData && this.columnData2 ? 2 : 1);
+      const barWidth = x.bandwidth() / (filteredColumnData && filteredColumnData2 ? 2 : 1);
 
       // First Bar (Always Present if Data Exists)
       barGroups
         .filter((d) => d.value1 !== null) // Only create bars when data is available
         .append('rect')
         .attr('class', 'bar bar1')
-        .attr('x', (this.columnData2 ? 0 : barWidth / 2)) // Center when only one bar
+        .attr('x', (filteredColumnData2 ? 0 : barWidth / 2)) // Center when only one bar
         .attr('y', height - margin.top - margin.bottom)
         .attr('width', barWidth)
         .attr('height', 0)
@@ -635,23 +720,23 @@ export class AdminNavBarComponent {
     }
 
     else if (this.selectedChart === 'line') {
-      console.log(this.labels.length);
+      console.log(filteredLabels.length);
       
       const line = d3.line<number>()
-        .x((_: any, i: any) => x(this.labels[i])! + x.bandwidth() / 2)
+        .x((_: any, i: any) => x(filteredLabels[i])! + x.bandwidth() / 2)
         .y((d: any) => y(d))
       // .curve(d3.curveMonotoneX);
 
       svg.append('path')
-        .datum(this.columnData)
+        .datum(filteredColumnData)
         .attr('fill', 'none')
         .attr('stroke', 'steelblue')
         .attr('stroke-width', 2)
         .attr('d', line);
 
-      if (this.columnData2 && this.columnData2.length > 0) {
+      if (filteredColumnData2 && filteredColumnData2.length > 0) {
         svg.append("path")
-          .datum(this.columnData2)
+          .datum(filteredColumnData2)
           .attr("fill", "none")
           .attr("stroke", 'tomato')
           .attr("stroke-width", 2)
@@ -659,8 +744,8 @@ export class AdminNavBarComponent {
       }
 
       const datasets = [
-        { data: this.columnData, class: 'circle1', color: 'steelblue', label: this.selectedColumnLabel },
-        { data: this.columnData2, class: 'circle2', color: 'tomato', label: this.additionalColumnLabel }
+        { data: filteredColumnData, class: 'circle1', color: 'steelblue', label: this.selectedColumnLabel },
+        { data: filteredColumnData2, class: 'circle2', color: 'tomato', label: this.additionalColumnLabel }
       ];
 
       datasets.forEach(({ data, class: className, color, label }) => {
@@ -671,14 +756,14 @@ export class AdminNavBarComponent {
           .enter()
           .append('circle')
           .attr('class', className)
-          .attr('cx', (_: any, i: any) => x(this.labels[i])! + x.bandwidth() / 2)
+          .attr('cx', (_: any, i: any) => x(filteredLabels[i])! + x.bandwidth() / 2)
           .attr('cy', height - margin.top - margin.bottom)
           .attr('r', 5)
           .attr('fill', color)
           .on('mouseover', (event, d) => {
             tooltip
               .style('visibility', 'visible')
-              .text(`Label: ${this.labels[data.indexOf(d)]}, ${label}: ${d}`)
+              .text(`Label: ${filteredLabels[data.indexOf(d)]}, ${label}: ${d}`)
               .style('top', `${event.pageY - 30}px`)
               .style('left', `${event.pageX + 10}px`);
           })
@@ -711,14 +796,14 @@ export class AdminNavBarComponent {
 
     } else if (this.selectedChart === 'pie') {
       this.additionalColumnLabel = "";
-      this.columnData2 = [];
+      filteredColumnData2 = [];
       const radius = Math.min(width, height) / 2.15;
       const pie = d3.pie<number>().value(d => d);
       const arc = d3.arc<d3.PieArcDatum<number>>()
         .innerRadius(0)
         .outerRadius(radius - 10);
 
-      const dataReady = pie(this.columnData);
+      const dataReady = pie(filteredColumnData);
 
       const g = svg.append('g')
         .attr('transform', `translate(${width / 2.5},${height / 2})`);  // place the pie in center
@@ -735,7 +820,7 @@ export class AdminNavBarComponent {
         .on('mouseover', (event, d) => {
           tooltip
             .style('visibility', 'visible')
-            .text(`Label: ${this.labels[d.index]}, ${this.selectedColumnLabel}: ${d.value}`)
+            .text(`Label: ${filteredLabels[d.index]}, ${this.selectedColumnLabel}: ${d.value}`)
             .style('top', `${event.pageY - 20}px`)
             .style('left', `${event.pageX + 10}px`);
         })
@@ -753,7 +838,7 @@ export class AdminNavBarComponent {
         .duration(1000)
         .attr('opacity', 1);
 
-      this.drawLegend(svg, width, this.labels);
+      this.drawLegend(svg, width, filteredLabels);
     }
   }
 

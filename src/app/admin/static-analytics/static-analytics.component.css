@@ -1,8 +1,8 @@
-.main-container{
+.main-container {
     display: flex;
     flex-direction: row;
 }
-.right-container{
+.right-container {
     display: flex;
     flex-direction: column;
     gap: 20px;
@@ -12,45 +12,66 @@
     padding: 20px;
     overflow-y: scroll;
 }
-.graph-container{
+
+.graph-container {
     width: calc(100% - 40px);
     padding: 40px;
     background-color: white;
 }
-.comparison-container{
-    width: calc(100% - 40px);
-    background-color: white;
-    height: max-content;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    padding: 20px;
-}
-.comparisonGraph-main-container{
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    width: 100%;
-    height: max-content;
-    background-color: aliceblue;
-}
-.product-details-container{
-    display: flex;
-    flex: row;
-    row-gap: 20px;
-    justify-content: space-between;
-}
-.product-details-card{
-    width: 400px;
-    height: 400px;
-    background-color: rgb(231, 223, 223);
-}
-#comparisonGraph{
-    width: 90% !important;
-}
-.main-graph{
-    height: 700px;
-}
 svg {
     overflow: visible;
-  }  
+}
+.graph-head{
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 10px;
+    height: max-content;
+    background-color: rgb(240, 241, 241);
+}
+.objects-container {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    width: 100%;
+    max-width: 130px;
+    flex-wrap: wrap;
+    background-color: aliceblue;
+    padding: 15px;
+} 
+.object-container{
+    width: 100%;
+}
+.object-container ul{
+    width: 100%;
+    margin: 0px;
+    padding: 0px;
+}
+.object-container ul li{
+    list-style: none;
+    width: 100%;
+    background-color: white;
+    padding: 5px 0px 0px 10px;
+}
+.object-container ul li:hover{
+    cursor: pointer;
+}
+.selected-fields{
+    width: 100%;
+    background-color: white;
+    padding: 5px 10px;
+}
+.chart-options-container{
+    display: flex;
+    flex-direction: column;
+    align-items: self-start;
+    padding: 15px;
+    gap: 10px;
+}
+.chart-type-container{
+    display: flex;
+    flex-direction: row;
+}
+h3{
+    margin: 8px;
+}
